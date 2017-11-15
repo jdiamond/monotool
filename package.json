@@ -1,0 +1,39 @@
+{
+  "name": "monotool",
+  "version": "1.0.0",
+  "description": "monorepo tool",
+  "license": "MIT",
+  "repository": "https://github.com/jdiamond/monotool",
+  "main": "lib/monotool.js",
+  "bin": {
+    "monotool": "./bin/monotool.js"
+  },
+  "files": [
+    "bin/*.js",
+    "lib/*.js"
+  ],
+  "dependencies": {
+    "dependency-graph": "0.6.0",
+    "getopts": "2.0.0",
+    "glob": "7.1.2",
+    "p-map": "1.2.0"
+  },
+  "devDependencies": {
+    "babel-cli": "6.26.0",
+    "babel-eslint": "8.0.2",
+    "babel-preset-env": "1.6.1",
+    "babel-preset-flow": "6.23.0",
+    "eslint": "4.11.0",
+    "eslint-plugin-flowtype": "2.39.1",
+    "flow-bin": "0.59.0"
+  },
+  "scripts": {
+    "start": "babel-node src/bin/monotool.js",
+    "test": "npm run eslint && npm run flow",
+    "eslint": "eslint src",
+    "flow": "flow",
+    "watch": "npm run build -- --watch",
+    "build": "babel src/ -d ./",
+    "prepare": "npm run build"
+  }
+}
