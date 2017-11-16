@@ -2,7 +2,7 @@
 
 import { readFile as readFile_ } from 'fs';
 import { join, dirname } from 'path';
-import { spawn as spawn_ } from 'child_process';
+import spawn_ from 'cross-spawn';
 import { promisify } from 'util';
 import glob_ from 'glob';
 import { DepGraph } from 'dependency-graph';
@@ -69,9 +69,7 @@ function install(pkg) {
 
   console.log(`running npm install in ${cwd}`);
 
-  const command = process.platform.startsWith('win') ? 'npm.cmd' : 'npm';
-
-  return spawn(command, ['install'], { env: process.env, cwd, stdio: 'inherit' });
+  return spawn('npm', ['install'], { env: process.env, cwd, stdio: 'inherit' });
 }
 
 export default async function main(opts: { _: string[] }) {
