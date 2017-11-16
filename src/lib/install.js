@@ -1,16 +1,8 @@
 // @flow
 
 import { dirname } from 'path';
-import spawn_ from 'cross-spawn';
 import { findPackages, buildGraph, overallOrder } from './packages';
-
-function spawn(command, args, options) {
-  return new Promise((resolve, reject) =>
-    spawn_(command, args, options)
-      .on('exit', resolve)
-      .on('error', reject)
-  );
-}
+import spawn from './spawn';
 
 type Opts = {
   'dry-run': boolean,
