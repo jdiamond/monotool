@@ -3,9 +3,21 @@
 // @flow
 
 import getopts from 'getopts';
-import main from '../lib/monotool';
+import * as commands from '../lib/commands';
 
-main(getopts(process.argv.slice(2)))
+async function main() {
+  const opts = getopts(process.argv.slice(2));
+
+  const cmd = opts._.shift();
+
+  if (commands[cmd]) {
+    return commands[cmd](opts);
+  }
+
+  return { ok: false, msg: `unknown command: ${cmd}` };
+}
+
+main()
   .then(result => {
     if (result.ok) {
       console.log('done');

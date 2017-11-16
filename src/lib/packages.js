@@ -1,8 +1,7 @@
 // @flow
 
 import { readFile as readFile_ } from 'fs';
-import { join, dirname } from 'path';
-import spawn_ from 'cross-spawn';
+import { join } from 'path';
 import { promisify } from 'util';
 import glob_ from 'glob';
 import { DepGraph } from 'dependency-graph';
@@ -13,7 +12,23 @@ const glob = promisify(glob_);
 
 const DEPENDENCY_TYPES = ['dependencies', 'devDependencies'];
 
-async function findPackages(dir) {
+type Pkg = {
+  path: string,
+  json: {
+    name: string,
+    dependencies: any,
+    devDependencies: any,
+  },
+};
+
+type Graph = {
+  addNode: Function,
+  addDependency: Function,
+  getNodeData: Function,
+  overallOrder: Function
+};
+
+export async function findPackages(dir: string) {
   const packages = await glob(join(dir, '*', 'package.json'), { absolute: true });
 
   return pMap(packages, async path => ({
@@ -22,8 +37,8 @@ async function findPackages(dir) {
   }));
 }
 
-function buildGraph(packages) {
-  const graph = new DepGraph();
+export function buildGraph(packages: Pkg[]) {
+  const graph: Graph = new DepGraph();
 
   for (const pkg of packages) {
     // console.log(`adding package ${pkg.json.name}`);
@@ -56,37 +71,6 @@ function buildGraph(packages) {
   return graph;
 }
 
-function spawn(command, args, options) {
-  return new Promise((resolve, reject) =>
-    spawn_(command, args, options)
-      .on('exit', resolve)
-      .on('error', reject)
-  );
-}
-
-function install(pkg) {
-  const cwd = dirname(pkg.path);
-
-  console.log(`running npm install in ${cwd}`);
-
-  return spawn('npm', ['install'], { env: process.env, cwd, stdio: 'inherit' });
-}
-
-export default async function main(opts: { _: string[] }) {
-  const cmd = opts._.shift();
-
-  if (cmd === 'install') {
-    const packages = await findPackages(opts._[0]);
-
-    const graph = buildGraph(packages);
-
-    for (const name of graph.overallOrder()) {
-      const pkg = graph.getNodeData(name);
-      await install(pkg);
-    }
-
-    return { ok: true };
-  } else {
-    return { ok: false, msg: `unknown command: ${cmd}` };
-  }
+export function overallOrder(packages: Pkg[], graph: Graph) {
+  return graph.overallOrder().map(name => graph.getNodeData(name));
 }
