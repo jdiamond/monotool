@@ -69,7 +69,9 @@ function install(pkg) {
 
   console.log(`running npm install in ${cwd}`);
 
-  return spawn('npm', ['install'], { env: process.env, cwd, stdio: 'inherit' });
+  const command = process.platform.startsWith('win') ? 'npm.cmd' : 'npm';
+
+  return spawn(command, ['install'], { env: process.env, cwd, stdio: 'inherit' });
 }
 
 export default async function main(opts: { _: string[] }) {
