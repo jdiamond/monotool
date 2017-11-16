@@ -15,7 +15,7 @@ const DEPENDENCY_TYPES = ['dependencies', 'devDependencies'];
 
 type Pkg = {
   path: string,
-  json: {
+  pkg: {
     name: string,
     dependencies: any,
     devDependencies: any,
@@ -23,10 +23,10 @@ type Pkg = {
 };
 
 type Graph = {
-  addNode: Function,
-  addDependency: Function,
-  getNodeData: Function,
-  overallOrder: Function,
+  addNode: (string, Pkg) => mixed,
+  addDependency: (string, string) => mixed,
+  getNodeData: string => Pkg,
+  overallOrder: () => string[],
 };
 
 export async function findPackages() {
@@ -39,26 +39,26 @@ export async function findPackages() {
 
   return pMap(packages, async path => ({
     path,
-    json: JSON.parse(await readFile(path, 'utf8')),
+    pkg: JSON.parse(await readFile(path, 'utf8')),
   }));
 }
 
 export function buildGraph(packages: Pkg[]) {
   const graph: Graph = new DepGraph();
 
-  for (const pkg of packages) {
-    // console.log(`adding package ${pkg.json.name}`);
+  for (const { path, pkg } of packages) {
+    // console.error(`adding package ${pkg.name}`);
 
-    graph.addNode(pkg.json.name, pkg);
+    graph.addNode(pkg.name, { path, pkg });
   }
 
-  for (const pkg of packages) {
-    // console.log(`finding dependencies for ${pkg.json.name}`);
+  for (const { pkg } of packages) {
+    // console.error(`finding dependencies for ${pkg.name}`);
 
     for (const dependencyType of DEPENDENCY_TYPES) {
-      const deps = Object.keys(pkg.json[dependencyType] || {})
+      const deps = Object.keys(pkg[dependencyType] || {})
         .map(key => {
-          const val = pkg.json[dependencyType][key];
+          const val = pkg[dependencyType][key];
 
           if (!val.startsWith('file:..')) {
             return null;
@@ -69,7 +69,7 @@ export function buildGraph(packages: Pkg[]) {
         .filter(Boolean);
 
       for (const dep of deps) {
-        graph.addDependency(pkg.json.name, dep);
+        graph.addDependency(pkg.name, dep);
       }
     }
   }
