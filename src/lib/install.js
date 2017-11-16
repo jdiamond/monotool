@@ -15,7 +15,7 @@ export default async function install(opts: Opts) {
   for (const pkg of overallOrder(packages, graph)) {
     const cwd = dirname(pkg.path);
 
-    console.log(`running npm install in ${cwd}`);
+    console.error(`running npm install in ${cwd}`);
 
     if (!opts['dry-run']) {
       await spawn('npm', ['install'], { env: process.env, cwd, stdio: 'inherit' });

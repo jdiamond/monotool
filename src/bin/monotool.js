@@ -20,7 +20,7 @@ async function main() {
 main()
   .then(result => {
     if (result.ok) {
-      console.log('done');
+      console.error('done');
     } else {
       console.error(result.msg);
       process.exit(1);
