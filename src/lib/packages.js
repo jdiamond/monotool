@@ -1,11 +1,12 @@
 // @flow
 
 import { readFile as readFile_ } from 'fs';
-import { join } from 'path';
+import { dirname, join } from 'path';
 import { promisify } from 'util';
 import glob_ from 'glob';
 import { DepGraph } from 'dependency-graph';
 import pMap from 'p-map';
+import readPkgUp from 'read-pkg-up';
 
 const readFile = promisify(readFile_);
 const glob = promisify(glob_);
@@ -25,11 +26,16 @@ type Graph = {
   addNode: Function,
   addDependency: Function,
   getNodeData: Function,
-  overallOrder: Function
+  overallOrder: Function,
 };
 
-export async function findPackages(dir: string) {
-  const packages = await glob(join(dir, '*', 'package.json'), { absolute: true });
+export async function findPackages() {
+  const root = await readPkgUp();
+  const pattern = join(root.pkg.packages || 'packages/*', 'package.json');
+  const packages = await glob(pattern, {
+    cwd: dirname(root.path),
+    absolute: true,
+  });
 
   return pMap(packages, async path => ({
     path,

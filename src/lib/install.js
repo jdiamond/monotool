@@ -13,12 +13,11 @@ function spawn(command, args, options) {
 }
 
 type Opts = {
-  _: string[],
   'dry-run': boolean,
 };
 
 export default async function install(opts: Opts) {
-  const packages = await findPackages(opts._[0]);
+  const packages = await findPackages();
   const graph = buildGraph(packages);
 
   for (const pkg of overallOrder(packages, graph)) {

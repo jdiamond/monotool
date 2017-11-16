@@ -17,7 +17,8 @@
     "dependency-graph": "0.6.0",
     "getopts": "2.0.0",
     "glob": "7.1.2",
-    "p-map": "1.2.0"
+    "p-map": "1.2.0",
+    "read-pkg-up": "3.0.0"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
