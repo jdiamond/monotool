@@ -28,11 +28,9 @@
     "babel-preset-flow": "6.23.0",
     "eslint": "4.11.0",
     "eslint-plugin-flowtype": "2.39.1",
-    "flow-bin": "0.59.0",
-    "use-yarn": "2.0.1"
+    "flow-bin": "0.59.0"
   },
   "scripts": {
-    "preinstall": "npx use-yarn",
     "start": "babel-node src/bin/monotool.js",
     "test": "npm run eslint && npm run flow",
     "eslint": "eslint src",
