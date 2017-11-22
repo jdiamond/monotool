@@ -5,6 +5,7 @@ import { findPackages, buildGraph, overallOrder } from './packages';
 import spawn from './spawn';
 
 type Opts = {
+  'package-manager': string,
   'dry-run': boolean,
 };
 
@@ -18,7 +19,7 @@ export default async function install(opts: Opts) {
     console.error(`running npm install in ${cwd}`);
 
     if (!opts['dry-run']) {
-      await spawn('npm', ['install'], { env: process.env, cwd, stdio: 'inherit' });
+      await spawn(opts['package-manager'], ['install'], { env: process.env, cwd, stdio: 'inherit' });
     }
   }
 
