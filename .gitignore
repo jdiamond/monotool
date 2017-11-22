@@ -2,3 +2,5 @@
 /lib
 /node_modules
 /packages/*/node_modules
+/packages/*/package-lock.json
+/packages/*/yarn.lock
