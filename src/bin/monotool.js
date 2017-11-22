@@ -2,11 +2,38 @@
 
 // @flow
 
+import readPkgUp from 'read-pkg-up';
+import requireMainFilename from 'require-main-filename';
 import getopts from 'getopts';
 import * as commands from '../lib/commands';
 
+function getVersion() {
+  try {
+    const result = readPkgUp.sync({
+      cwd: requireMainFilename(require),
+      normalize: false,
+    });
+
+    return result.pkg.version || '<unknown>';
+  } catch (noop) {
+    return '<unknown>';
+  }
+}
+
 async function main() {
-  const opts = getopts(process.argv.slice(2));
+  console.error(`monotool v${getVersion()}`);
+
+  const opts = getopts(process.argv.slice(2), {
+    boolean: ['dry-run'],
+    default: {
+      'dry-run': false,
+      'package-manager': 'npm',
+    },
+    alias: {
+      p: 'package-manager',
+      n: 'dry-run',
+    },
+  });
 
   const cmd = opts._.shift();
 
