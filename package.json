@@ -23,12 +23,12 @@
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
-    "babel-eslint": "8.0.2",
+    "babel-eslint": "8.2.1",
     "babel-preset-env": "1.6.1",
     "babel-preset-flow": "6.23.0",
-    "eslint": "4.11.0",
-    "eslint-plugin-flowtype": "2.39.1",
-    "flow-bin": "0.59.0"
+    "eslint": "4.15.0",
+    "eslint-plugin-flowtype": "2.41.0",
+    "flow-bin": "0.63.1"
   },
   "scripts": {
     "start": "babel-node src/bin/monotool.js",
