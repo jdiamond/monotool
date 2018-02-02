@@ -13,8 +13,8 @@
     "lib/*.js"
   ],
   "dependencies": {
-    "cross-spawn": "5.1.0",
-    "dependency-graph": "0.6.0",
+    "cross-spawn": "6.0.4",
+    "dependency-graph": "0.7.0",
     "getopts": "2.0.0",
     "glob": "7.1.2",
     "p-map": "1.2.0",
@@ -26,9 +26,9 @@
     "babel-eslint": "8.2.1",
     "babel-preset-env": "1.6.1",
     "babel-preset-flow": "6.23.0",
-    "eslint": "4.15.0",
-    "eslint-plugin-flowtype": "2.41.0",
-    "flow-bin": "0.63.1"
+    "eslint": "4.16.0",
+    "eslint-plugin-flowtype": "2.42.0",
+    "flow-bin": "0.64.0"
   },
   "scripts": {
     "start": "babel-node src/bin/monotool.js",
