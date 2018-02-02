@@ -2,58 +2,70 @@
 
 // @flow
 
-import readPkgUp from 'read-pkg-up';
-import requireMainFilename from 'require-main-filename';
 import getopts from 'getopts';
 import * as commands from '../lib/commands';
-
-function getVersion() {
-  try {
-    const result = readPkgUp.sync({
-      cwd: requireMainFilename(require),
-      normalize: false,
-    });
-
-    return result.pkg.version || '<unknown>';
-  } catch (noop) {
-    return '<unknown>';
-  }
-}
+import { showHelp } from '../lib/help';
+import { getVersion } from '../lib/version';
 
 async function main() {
-  console.error(`monotool v${getVersion()}`);
-
   const opts = getopts(process.argv.slice(2), {
-    boolean: ['dry-run'],
+    alias: {
+      h: 'help',
+      n: 'dry-run',
+      p: 'package-manager',
+      q: 'quiet',
+      v: 'version',
+    },
+    boolean: ['dry-run', 'help', 'quiet'],
     default: {
       'dry-run': false,
+      help: false,
       'package-manager': 'npm',
-    },
-    alias: {
-      p: 'package-manager',
-      n: 'dry-run',
+      quiet: false,
+      version: false,
     },
   });
 
   const cmd = opts._.shift();
 
-  if (commands[cmd]) {
-    return commands[cmd](opts);
-  }
+  if (opts.help || cmd === 'help') {
+    showHelp();
+  } else if (opts.version || cmd === 'version') {
+    console.log(`monotool v${getVersion()}`);
+  } else {
+    if (!opts.quiet) {
+      console.error(`monotool v${getVersion()}`);
+    }
 
-  return { ok: false, msg: `unknown command: ${cmd}` };
-}
+    const result = await runCommand(cmd, opts);
 
-main()
-  .then(result => {
-    if (result.ok) {
-      console.error('done');
-    } else {
-      console.error(result.msg);
+    if (!result.ok) {
+      if (!opts.quiet) {
+        console.error('monotool: error');
+
+        if (result.msg) {
+          console.error(result.msg);
+        }
+      }
+
       process.exit(1);
     }
-  })
-  .catch(error => {
-    console.error(error);
-    process.exit(1);
-  });
+
+    if (!opts.quiet) {
+      console.error('monotool: ok');
+    }
+  }
+}
+
+function runCommand(cmd, opts) {
+  if (!commands[cmd]) {
+    return { ok: false, msg: `unknown command: ${cmd}` };
+  }
+
+  return commands[cmd](opts).catch(err => ({
+    ok: false,
+    msg: err.msg || 'unexpected error',
+  }));
+}
+
+main();

@@ -26,6 +26,7 @@ type Graph = {
   addNode: (string, Pkg) => mixed,
   addDependency: (string, string) => mixed,
   getNodeData: string => Pkg,
+  dependenciesOf: string => string[],
   overallOrder: () => string[],
 };
 
@@ -75,6 +76,10 @@ export function buildGraph(packages: Pkg[]) {
   }
 
   return graph;
+}
+
+export function dependenciesOf(name: string, packages: Pkg[], graph: Graph) {
+  return graph.dependenciesOf(name).map(name => graph.getNodeData(name));
 }
 
 export function overallOrder(packages: Pkg[], graph: Graph) {
