@@ -1,0 +1,9 @@
+{
+  "name": "@example/web-app",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {},
+  "dependencies": {
+    "@example/web-components": "file:../web-components"
+  }
+}

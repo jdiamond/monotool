@@ -1,0 +1,9 @@
+{
+  "name": "@example/web-components",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {},
+  "dependencies": {
+    "@example/utils": "*"
+  }
+}

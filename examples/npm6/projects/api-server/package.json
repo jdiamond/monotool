@@ -1,0 +1,10 @@
+{
+  "name": "@example/api-server",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {},
+  "dependencies": {
+    "@example/db": "file:../db",
+    "@example/utils": "file:../utils"
+  }
+}

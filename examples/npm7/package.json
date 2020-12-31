@@ -1,0 +1,8 @@
+{
+  "name": "monotool-example-npm7",
+  "private": true,
+  "version": "0.0.0",
+  "workspaces": [
+    "projects/*"
+  ]
+}

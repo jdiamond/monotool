@@ -1,0 +1,8 @@
+{
+  "name": "monotool-example-npm6",
+  "private": true,
+  "version": "0.0.0",
+  "packages": [
+    "projects/*"
+  ]
+}

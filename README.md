@@ -1,6 +1,6 @@
 # monotool
 
-A tool to manage monorepos.
+A tool to manage monorepos with npm (with or without npm workspaces in npm v7).
 
 ## Local Packages
 
@@ -8,44 +8,29 @@ For the purpose of this documentation, a "local package" is a folder in the
 monorepo containing a package.json file. By default, those folders must be a
 sub-folder of "packages", but that can be changed.
 
-Local packages reference each other with `file:..` URLs in their package.json
-dependencies. For example, if "packages/a" depends on "packages/b", the
-package.json in "packages/a" would contain a dependency that looks like `"b":
-"file:../b"`.
+Each package.json file can contain a name that doesn't exactly match the folder
+name. For example, the package.json file in "packages/a" might have a `name` of
+"@my-org/a".
+
+When not using npm workspaces (added in npm v7), local packages reference each
+other with `file:..` URLs in their package.json dependencies. For example, if
+"packages/a" depends on "packages/b", the package.json in "packages/a" would
+contain a dependency that looks like `"@my-org/b": "file:../b"`.
+
+When using npm workspaces in npm v7, local package dependecies can use version
+ranges or even "*" like `"@my-org/b": "*"`.
 
 Local packages can, of course, reference any package on npm or elsewhere as any
 normal Node.js project would.
 
-Local packages are not assumed to be published to npm.
+If not using npm workspaces, add `"packages"` to your root package.json to
+indicate where to look for local packages. The default is `["packages/*"]`. Then
+you would run `monotool install` which will run `npm install` in each package
+directory.
 
-Add `"packages"` to your root package.json to indicate where to look for
-local packages. The default is `"packages/*"`.
-
-## Example
-
-```
-.
-├── package.json
-└── packages
-    ├── a
-    │   └── package.json
-    ├── b
-    │   └── package.json
-    └── c
-        └── package.json
-```
-
-## npm or yarn
-
-Monotool can spawn either npm or yarn, but it was really designed to be used
-with npm and not yarn.
-
-The difference between npm and yarn with respect to `file:..` URLs is that npm
-(starting in v5) creates links on your file system making it much easier for
-tools like [nodemon](https://nodemon.io/) to detect when dependencies change
-while developing.
-
-If you really want to use yarn, use the `-p yarn` option when invoking monotool.
+If using npm workspaces, use `"workspaces"` instead of `"packages"`. Then you
+would run `npm install` from the root directory. Other commands like `monotool
+list` might still be useful and are safe to run without interfering with npm.
 
 ## Commands
 
@@ -55,9 +40,12 @@ If you really want to use yarn, use the `-p yarn` option when invoking monotool.
 monotool install
 ```
 
-Runs `npm install` in each folder containing a package.json file.
+Runs `npm install` for each local package.
 
-It does not hoist common modules.
+It will install in dependency order so that any postinstall or prepare scripts
+can run before their dependents need them.
+
+Do not use this command if you are using npm workspaces.
 
 ### list
 
@@ -65,6 +53,10 @@ It does not hoist common modules.
 monotool list [target]
 ```
 
-Lists local projects in dependency order.
+Lists local packages in dependency order. By default, the relative path to each
+directory is printed. That can be changed by using `-i files` or `-i names` to
+print the paths to the package.json files or the actual package names. To print
+absolute paths, use `-a`.
 
-If a target is specified, only list dependencies of that target.
+When no target is specified, all local packages are output. When a target is
+specified, only dependencies of that target (and itself) are output.

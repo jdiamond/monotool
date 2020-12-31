@@ -1,8 +1,8 @@
 /bin
 /lib
 /node_modules
-/package-lock.json
+/examples/*/package-lock.json
+/examples/*/projects/*/node_modules
+/examples/*/projects/*/package-lock.json
 /packages/*/node_modules
 /packages/*/package-lock.json
-/packages/*/yarn.lock
-/yarn.lock
