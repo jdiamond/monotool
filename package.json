@@ -16,7 +16,7 @@
     "dependency-graph": "0.9.0",
     "glob": "7.1.6",
     "p-map": "4.0.0",
-    "read-pkg-up": "7.0.1",
+    "read-pkg-up": "9.1.0",
     "yargs": "16.2.0"
   },
   "devDependencies": {
